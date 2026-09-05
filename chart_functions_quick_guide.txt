@@ -1,0 +1,195 @@
+HUONG DAN NHANH CAC HAM TAO BIEU DO
+====================================
+Notebook: diabetes_prediction.ipynb
+
+MUC LUC CAC CELL CO BIEU DO
+---------------------------
+1. Phan tich tong quan: pie, hist, scatter
+2. Heatmap tuong quan: corr, sns.heatmap
+3. Boxplot: df.boxplot
+4. He so Logistic Regression: barh, axvline
+5. Danh gia mo hinh: confusion matrix, ROC curve
+
+0. CAC HAM DUNG CHUNG
+---------------------
+plt.figure(figsize=(w, h))
+- Tao mot khung ve moi.
+- figsize quy dinh kich thuoc theo inch.
+
+plt.subplots(rows, cols, figsize=(w, h))
+- Tao nhieu bieu do trong cung mot figure.
+- Tra ve fig va mang axes; vi du axes[0, 1] la o hang 1, cot 2.
+
+fig.suptitle('Tieu de')
+- Dat tieu de chung cho toan bo figure.
+
+ax.set_title('Tieu de')
+- Dat tieu de cho mot bieu do nho.
+
+ax.set_xlabel('...') / ax.set_ylabel('...')
+- Dat ten truc X va truc Y.
+
+plt.tight_layout()
+- Tu can chinh khoang cach de tieu de, nhan truc va bieu do khong de len nhau.
+
+plt.savefig('duong/dan.png', dpi=150, bbox_inches='tight')
+- Luu bieu do thanh file.
+- dpi: do phan giai; bbox_inches='tight': cat phan le thua.
+
+plt.show()
+- Hien thi bieu do trong notebook.
+
+1. CELL PHAN TICH TONG QUAN
+----------------------------
+Muc dich chung: Kham pha du lieu ban dau (Exploratory Data Analysis - EDA),
+nhin nhanh ty le nhan, phan phoi cac bien va moi quan he giua hai bien.
+
+value_counts()
+- Dem so lan xuat hien cua moi nhan.
+- Dung de tao phan phoi diabetes 0/1.
+
+sort_index()
+- Sap xep ket qua theo index, giup thu tu nhan 0 roi 1.
+
+axes[0, 0].pie(values, labels=..., autopct=..., colors=..., startangle=90)
+- Tao bieu do tron.
+- Dung de xem ty le (proportion - ty le) cua tung nhom trong tong so mau.
+- values: cac gia tri can ve.
+- labels: ten cac phan.
+- autopct='%1.1f%%': hien thi phan tram, 1 chu so thap phan.
+- startangle=90: xoay diem bat dau 90 do.
+
+series.hist(ax=..., bins=30, alpha=..., color=..., label=...)
+- Ve histogram, dung de xem phan phoi cua mot cot so.
+- Dung de biet du lieu tap trung o khoang nao, phan tan ra sao va co lech khong.
+- ax: ve vao subplot da co.
+- bins: so khoang; bins lon hon thi cot nho hon.
+- alpha: do trong suot; label: ten hien trong chu thich.
+- Trong notebook, hai histogram duoc chong len nhau de so sanh 2 nhom.
+
+axes[1, 1].scatter(x, y, c=..., cmap=..., alpha=..., s=...)
+- Ve bieu do phan tan giua hai bien.
+- Dung de xem xu huong (trend - xu huong), cum diem va diem bat thuong.
+- Moi cham la mot mau; neu cac cham tao thanh duong huong ro thi hai bien co lien he.
+- x, y: bien tren truc X/Y.
+- c: mau cua tung diem theo diabetes.
+- cmap: bang mau; alpha: do trong suot; s: kich thuoc diem.
+
+plt.colorbar(scatter, ax=...)
+- Them thang chu thich mau, cho biet mau tuong ung voi gia tri nao.
+
+2. CELL HEATMAP TUONG QUAN
+--------------------------
+Muc dich: Tom tat moi quan he tuyen tinh (linear relationship - quan he tuyen tinh)
+giua nhieu bien tren cung mot hinh, giup tim bien co the lien quan den nhan diabetes.
+
+df.select_dtypes(include=['number'])
+- Loc chi cac cot co kieu so.
+- Can thiet vi corr() khong phu hop voi cot chuoi.
+
+df[numeric_cols].corr()
+- Tinh he so tuong quan giua tung cap bien.
+- Gia tri gan 1: cung tang; gan -1: mot bien tang thi bien kia giam;
+  gan 0: it co quan he tuyen tinh.
+
+sns.heatmap(data, annot=True, fmt='.2f', cmap='coolwarm', center=0,
+            square=True, linewidths=0.5)
+- Bieu dien ma tran so bang mau.
+- Dung de so sanh nhanh muc do va huong tuong quan giua cac cap bien.
+- annot=True: viet gia tri len o.
+- fmt='.2f': lam tron 2 chu so thap phan.
+- cmap='coolwarm': bang mau am/lạnh va duong/nong.
+- center=0: dat mau trung tam tai 0.
+- square=True: o co dang vuong; linewidths: vien giua cac o.
+
+3. CELL BOXPLOT
+---------------
+Muc dich: So sanh phan phoi (distribution - phan phoi) cua cac bien so giua
+nhom khong bi diabetes va bi diabetes, dong thoi phat hien ngoai le.
+
+df.boxplot(column='...', by='diabetes', ax=..., grid=False)
+- So sanh phan phoi mot bien so theo nhom diabetes.
+- column: cot can ve.
+- by: cot dung de chia nhom.
+- ax: subplot dich.
+- grid=False: tat luoi.
+
+Cach doc boxplot:
+- Duong giua hop: median (trung vi).
+- Hop: khoang tu Q1 den Q3.
+- Whisker: pham vi du lieu chinh.
+- Cham ben ngoai: gia tri ngoai le.
+- Hop va median lech nhau giua hai nhom: phan phoi hai nhom co the khac nhau.
+
+4. CELL HE SO LOGISTIC REGRESSION
+---------------------------------
+Muc dich: Giai thich anh huong cua tung dac trung den du doan mo hinh.
+Day la bieu do phan tich mo hinh (model interpretation - giai thich mo hinh),
+khong phai bieu do phan phoi du lieu.
+
+pd.DataFrame({...})
+- Tao bang tu cac cot Feature, Coefficient va Abs_Coefficient.
+
+np.abs(model.coef_[0])
+- Lay tri tuyet doi cua he so de do muc do quan trong, bo qua dau am/duong.
+
+sort_values('Abs_Coefficient', ascending=False)
+- Sap xep dac trung theo do lon tuyet doi cua he so.
+
+plt.barh(coef_df['Feature'], coef_df['Coefficient'], color=colors)
+- Ve bieu do cot ngang.
+- Chieu dai cot la he so; dau duong/am cho biet huong tac dong.
+- Cot dai hon ve tri tuyet doi: dac trung co anh huong manh hon trong mo hinh.
+- He so duong: tang xac suat du doan diabetes; he so am: giam xac suat.
+
+plt.axvline(x=0, color='black', linewidth=0.8)
+- Ve duong doc tai x=0 de phan biet he so duong va am.
+
+5. CELL DANH GIA MO HINH
+------------------------
+Muc dich: Kiem tra mo hinh du doan dung hay sai va mo hinh phan biet hai lop
+tot den dau. Day la cac bieu do danh gia (evaluation charts - bieu do danh gia).
+
+confusion_matrix(y_test, y_pred)
+- Tao ma tran gom True Negative, False Positive, False Negative, True Positive.
+- y_test: nhan that; y_pred: nhan mo hinh du doan.
+
+sns.heatmap(cm, annot=True, fmt='d', xticklabels=..., yticklabels=...)
+- Hien thi confusion matrix dang bang mau.
+- annot=True: hien so mau; fmt='d': hien so nguyen.
+- truc X la Predicted; truc Y la Actual.
+- Dung de xem mo hinh nham lan loai nao; dac biet quan trong khi bo sot ca benh.
+- True Positive (TP - duong tinh that), False Positive (FP - duong tinh gia).
+- True Negative (TN - am tinh that), False Negative (FN - am tinh gia/bo sot).
+
+roc_curve(y_test, y_prob)
+- Tinh cac diem cho duong ROC.
+- ROC (Receiver Operating Characteristic - dac tinh van hanh bo thu) danh gia
+  mo hinh o nhieu nguong phan loai khac nhau.
+- Tra ve fpr (False Positive Rate), tpr (True Positive Rate) va nguong.
+- y_prob phai la xac suat lop 1, thuong lay tu predict_proba()[:, 1].
+
+axes[1].plot(fpr, tpr, lw=2, label=...)
+- Ve duong ROC tu fpr va tpr.
+- Duong cong cang gan goc tren-trai thi mo hinh cang tot.
+- Truc X: FPR (False Positive Rate - ty le duong tinh gia).
+- Truc Y: TPR (True Positive Rate - ty le duong tinh that/Recall - do nhay).
+
+axes[1].plot([0, 1], [0, 1], linestyle='--')
+- Ve duong ngau nhien de lam moc so sanh.
+
+axes[1].fill_between(fpr, tpr, alpha=0.1)
+- To mau nhat phia duoi duong ROC de de quan sat.
+
+ROC-AUC (Area Under the Curve - dien tich duoi duong cong)
+- La dien tich duoi duong ROC; cang gan 1 thi kha nang phan biet hai lop cang tot.
+- AUC gan 0.5 gan voi du doan ngau nhien.
+
+GHI NHO QUAN TRONG
+------------------
+- plt: thu vien dieu khien figure va bieu do cua Matplotlib.
+- ax/axes: doi tuong cua tung subplot.
+- sns: Seaborn, thu vien lam bieu do thong ke dep va de doc hon.
+- model.predict(): tra ve nhan 0/1.
+- model.predict_proba()[:, 1]: tra ve xac suat du doan lop 1, dung cho ROC-AUC/ROC.
+- plt.show() de xem; plt.savefig() de luu. Nen goi savefig truoc show.

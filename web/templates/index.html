@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dự đoán Bệnh Tiểu Đường</title>
+    <!-- Inter font for a modern UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div class="brand">
+          <strong>DiabetesCare</strong>
+          <span class="tagline">Dự đoán nguy cơ tiểu đường</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="hero">
+        <h1>Ứng dụng Dự đoán Nguy cơ Tiểu Đường</h1>
+        <p class="lead">Nhập các thông tin sức khỏe bên dưới để hệ thống phân tích bằng mô hình Machine Learning.</p>
+      </div>
+
+      <form id="prediction-form" class="card form-card" novalidate>
+        <h2>Thông tin bệnh nhân</h2>
+        <div class="form-grid">
+          <label>Giới tính (Gender)
+            <select name="gender">
+              <option value="Female">Nữ (Female)</option>
+              <option value="Male">Nam (Male)</option>
+              <option value="Other">Khác (Other)</option>
+            </select>
+          </label>
+          <label>Tuổi (Age)
+            <div class="number-control">
+              <button class="number-step" type="button" data-step="-1" aria-label="Giảm tuổi">−</button>
+              <input name="age" type="number" min="0" max="120" value="30" step="1" required>
+              <button class="number-step" type="button" data-step="1" aria-label="Tăng tuổi">+</button>
+            </div>
+          </label>
+          <label>Tăng huyết áp (Hypertension)
+            <select name="hypertension"><option value="0">Không (No)</option><option value="1">Có (Yes)</option></select>
+          </label>
+          <label>Bệnh tim (Heart Disease)
+            <select name="heart_disease"><option value="0">Không (No)</option><option value="1">Có (Yes)</option></select>
+          </label>
+          <label>Lịch sử hút thuốc (Smoking History)
+            <select name="smoking_history">
+              <option value="never">Chưa bao giờ (Never)</option><option value="No Info">Không có thông tin (No Info)</option><option value="current">Hiện tại (Current)</option><option value="former">Trước đây (Former)</option><option value="ever">Đã từng (Ever)</option><option value="not current">Không hút hiện tại (Not Current)</option>
+            </select>
+          </label>
+          <label>Chỉ số khối cơ thể (BMI)
+            <div class="number-control">
+              <button class="number-step" type="button" data-step="-1" aria-label="Giảm chỉ số BMI">−</button>
+              <input name="bmi" type="number" min="10" max="100" value="25" step="0.1" required>
+              <button class="number-step" type="button" data-step="1" aria-label="Tăng chỉ số BMI">+</button>
+            </div>
+          </label>
+          <label>Nồng độ HbA1c (%)
+            <div class="number-control">
+              <button class="number-step" type="button" data-step="-1" aria-label="Giảm nồng độ HbA1c">−</button>
+              <input name="HbA1c_level" type="number" min="3" max="15" value="5.5" step="0.1" required>
+              <button class="number-step" type="button" data-step="1" aria-label="Tăng nồng độ HbA1c">+</button>
+            </div>
+          </label>
+          <label>Đường huyết (Blood Glucose mg/dL)
+            <div class="number-control">
+              <button class="number-step" type="button" data-step="-1" aria-label="Giảm đường huyết">−</button>
+              <input name="blood_glucose_level" type="number" min="50" max="300" value="100" step="1" required>
+              <button class="number-step" type="button" data-step="1" aria-label="Tăng đường huyết">+</button>
+            </div>
+          </label>
+        </div>
+        <button type="submit" class="primary">Dự đoán</button>
+      </form>
+
+      <section id="result" class="hidden" aria-live="polite"></section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>
